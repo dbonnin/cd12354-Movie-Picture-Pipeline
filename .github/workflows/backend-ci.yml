@@ -1,4 +1,4 @@
-name: 'Front end'
+name: 'Backend-CI'
 
 # Triggers for the workflow
 on:
@@ -22,9 +22,9 @@ jobs:
       with:
         node-version: latest
     - name: Install dependencies
-      run: cd solution/frontend && npm ci      
+      run: cd solution/backend && npm ci      
     - name: Run tests
-      run: cd solution/frontend && npm test      
+      run: cd solution/backend && npm test      
   lint:
     runs-on: ubuntu-latest
     # Steps in the job
@@ -36,9 +36,9 @@ jobs:
       with:
         node-version: latest
     - name: Install dependencies
-      run: cd solution/frontend && npm ci      
+      run: cd solution/backend && npm ci      
     - name: Run lint
-      run: cd solution/frontend && npm run lint
+      run: cd solution/backend && npm run lint
   build:
         needs: [test, lint]
         runs-on: ubuntu-latest
