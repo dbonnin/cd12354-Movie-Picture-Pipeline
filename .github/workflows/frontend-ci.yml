@@ -60,7 +60,7 @@ jobs:
       # Build the Docker image
       - name: Build Docker image
         run: |
-          docker build --tag frontend:${GIT_SHA} .        
+          docker build --tag frontend:${{ GIT_SHA }} .        
       # # Configure the AWS credentials
       # - name: Configure AWS Credentials
       #   uses: aws-actions/configure-aws-credentials@v2
