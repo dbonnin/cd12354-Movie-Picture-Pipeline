@@ -11,19 +11,28 @@ on:
       - main
 jobs:
   lint:
-    runs-on: ubuntu-latest    
-    
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v3
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: latest    
     - name: Run Linter
       run: |
         pip install flake8
         flake8 .  
   build:
     needs: lint
-    runs-on: ubuntu-latest    
-    steps:
-    - uses: actions/checkout@v3
+    runs-on: ubuntu-latest 
+    steps: 
+    - name: Checkout code
+      uses: actions/checkout@v3
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: latest          
     - name: Build Application
       run: |
         cd solution/backend
@@ -31,12 +40,18 @@ jobs:
         pipenv install --dev        
   test:
     needs: build
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - name: Run Tests
+    runs-on: ubuntu-latest 
+    steps: 
+    - name: Checkout code
+      uses: actions/checkout@v3
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: latest    
+    - name: Install Pipenv
+      run: cd solution/backend && pip install pipenv   
+    - name: Run tests
       run: |
         cd solution/backend
-        pip install pipenv
-        pipenv install --dev 
-        pytest        
+        pipenv run pytest       
+     
