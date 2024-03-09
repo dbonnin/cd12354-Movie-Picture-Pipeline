@@ -18,7 +18,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: latest    
+        python-version: 3.11    
     - name: Run Linter
       run: |
         pip install flake8
@@ -32,7 +32,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: latest          
+        python-version: 3.11          
     - name: Build Application
       run: |
         cd solution/backend
@@ -47,7 +47,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: latest    
+        python-version: 3.11    
     - name: Install Pipenv
       run: cd solution/backend && pip install pipenv   
     - name: Run tests
