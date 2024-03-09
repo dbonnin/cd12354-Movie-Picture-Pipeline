@@ -78,7 +78,7 @@ jobs:
         run: aws ecr get-login-password --region ${{ vars.AWS_REGION }} | docker login --username AWS --password-stdin ${{ vars.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com
       # Tag the Docker image for Amazon ECR
       - name: Tag Docker image for Amazon ECR
-        run: docker tag frontend:latest ${{ vars.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/movies/frontend:${{ github.sha }}
+        run: docker tag frontend:${{ github.sha }} ${{ vars.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/movies/frontend:${{ github.sha }}
       # Push the Docker image to Amazon ECR
       - name: Push Docker image to Amazon ECR
         run: docker push ${{ vars.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/movies/frontend:${{ github.sha }}
