@@ -11,41 +11,30 @@ on:
       - main
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    # Steps in the job
-    steps:
-    - name: Check out repository
-      uses: actions/checkout@v3
-    - name: Use Node.js 
-      uses: actions/setup-node@v3
-      with:
-        node-version: latest
-    - name: Install dependencies
-      run: cd solution/backend && npm ci      
-    - name: Run tests
-      run: cd solution/backend && npm test      
+
   lint:
-    runs-on: ubuntu-latest
-    # Steps in the job
+    runs-on: ubuntu-latest    
     steps:
-    - name: Check out repository
-      uses: actions/checkout@v3
-    - name: Use Node.js 
-      uses: actions/setup-node@v3
-      with:
-        node-version: latest
-    - name: Install dependencies
-      run: cd solution/backend && npm ci      
-    - name: Run lint
-      run: cd solution/backend && npm run lint
+    - uses: actions/checkout@v3
+    - name: Run Linter
+      run: |
+        pip install flake8
+        flake8 .  
   build:
-        needs: [test, lint]
-        runs-on: ubuntu-latest
-        steps:
-          - name: Check out repository
-            uses: actions/checkout@v3
-          - name: Use Node.js 
-            uses: actions/setup-node@v3
-            with:
-              node-version: latest        
+    needs: lint
+    runs-on: ubuntu-latest    
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build Application
+      run: |
+        pip install -r requirements.txt
+        python setup.py build        
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Run Tests
+      run: |
+        pip install -r requirements.txt
+        pytest        
