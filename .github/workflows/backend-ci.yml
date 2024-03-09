@@ -51,7 +51,6 @@ jobs:
     - name: Install Pipenv
       run: cd solution/backend && pip install pipenv   
     - name: Run tests
-      run: |
-        cd solution/backend
-        pipenv run pytest       
+      run: pipenv run test
+      working-directory: solution/backend    
      
