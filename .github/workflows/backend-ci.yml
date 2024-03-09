@@ -48,9 +48,17 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: 3.11    
+    
     - name: Install Pipenv
-      run: cd solution/backend && pip install pipenv   
+      run: pip install pipenv
+      working-directory: solution/backend
+    
+    - name: Install dependencies
+      run: pipenv install --dev
+      working-directory: solution/backend
+    
     - name: Run tests
       run: pipenv run test
-      working-directory: solution/backend    
+      working-directory: solution/backend
+
      
