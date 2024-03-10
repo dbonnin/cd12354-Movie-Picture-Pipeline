@@ -64,6 +64,27 @@ jobs:
     - name: Print the image tag
       run: echo "$(echo ${{ github.sha }})"        
 
+  build_image:
+    needs: test
+    runs-on: ubuntu-latest 
+    environment:
+      name: staging        
+    steps: 
+    - name: Checkout code
+      uses: actions/checkout@v3
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.11    
+    
+    - name: Install Pipenv
+      run: pip install pipenv
+      working-directory: solution/backend
+    
+    - name: Install dependencies
+      run: pipenv install --dev
+      working-directory: solution/backend
+    
     - name: Build Docker image
       run: |
         cd solution/backend && docker build --tag movies-backend:${{ github.sha }} .        
