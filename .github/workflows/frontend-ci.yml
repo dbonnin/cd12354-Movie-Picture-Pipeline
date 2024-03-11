@@ -1,4 +1,4 @@
-name: 'Front end'
+name: 'Frontend-CI'
 
 # Triggers for the workflow
 on:

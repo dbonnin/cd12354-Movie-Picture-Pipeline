@@ -1,0 +1,108 @@
+name: 'Backend-CI'
+
+# Triggers for the workflow
+on:
+  # Manual trigger using the workflow_dispatch event
+  workflow_dispatch:
+
+  # Automatic trigger on push events to the main branch
+  push:
+    branches:
+      - main
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.11    
+    - name: Run Linter
+      run: |
+        pip install flake8
+        flake8 .  
+  build:
+    needs: lint
+    runs-on: ubuntu-latest 
+    steps: 
+    - name: Checkout code
+      uses: actions/checkout@v3
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.11          
+    - name: Build Application
+      run: |
+        cd solution/backend
+        pip install pipenv
+        pipenv install --dev        
+  test:
+    needs: build
+    runs-on: ubuntu-latest 
+    steps: 
+    - name: Checkout code
+      uses: actions/checkout@v3
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.11    
+    
+    - name: Install Pipenv
+      run: pip install pipenv
+      working-directory: solution/backend
+    
+    - name: Install dependencies
+      run: pipenv install --dev
+      working-directory: solution/backend
+    
+    - name: Run tests
+      run: pipenv run test
+      working-directory: solution/backend
+
+    - name: Print the image tag
+      run: echo "$(echo ${{ github.sha }})"        
+
+  build_image:
+    needs: test
+    runs-on: ubuntu-latest 
+    environment:
+      name: staging        
+    steps: 
+    - name: Checkout code
+      uses: actions/checkout@v3
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.11    
+    
+    - name: Install Pipenv
+      run: pip install pipenv
+      working-directory: solution/backend
+    
+    - name: Install dependencies
+      run: pipenv install --dev
+      working-directory: solution/backend
+    
+    - name: Build Docker image
+      run: |
+        cd solution/backend && docker build --tag movies-backend:${{ github.sha }} .        
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+        aws-region: ${{ vars.AWS_REGION }}
+
+    - name: Update kubeconfig for EKS cluster
+      run: |
+        aws eks update-kubeconfig --name ${{ vars.AWS_EKS_CLUSTER }} # Replace with your EKS cluster name
+      
+    - name: Deploy to EKS
+      run: |
+        kubectl apply -f solution/backend/k8s/        
+
+
