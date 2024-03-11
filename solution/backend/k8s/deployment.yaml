@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
         - name: backend
-          image: ${{ env.CONTAINER_IMAGE_URL }}
+          image: backend
           ports:
             - containerPort: 5000
