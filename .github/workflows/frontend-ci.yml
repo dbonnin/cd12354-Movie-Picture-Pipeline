@@ -16,12 +16,19 @@ jobs:
     steps:
     - name: Check out repository
       uses: actions/checkout@v3
+
+    - name: Cache npm dependencies
+      uses: actions/cache@v2
+      with:
+        path: solution/frontend/node_modules
+        key: ${{ runner.os }}-node-${{ hashFiles('solution/frontend/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-         
+
     - name: Use Node.js 
       uses: actions/setup-node@v3
       with:
         node-version: latest
-        cache: npm
-        cache-dependency-path: solution/frontend/node_modules
     - name: Install dependencies
       run: cd solution/frontend && npm ci      
     - name: Run tests
@@ -34,11 +41,19 @@ jobs:
     steps:
     - name: Check out repository
       uses: actions/checkout@v3
+
+    - name: Cache npm dependencies
+      uses: actions/cache@v2
+      with:
+        path: solution/frontend/node_modules
+        key: ${{ runner.os }}-node-${{ hashFiles('solution/frontend/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-         
+
     - name: Use Node.js 
       uses: actions/setup-node@v3
       with:
         node-version: latest
-        cache: npm
     - name: Install dependencies
       run: cd solution/frontend && npm ci      
     - name: Run lint
@@ -51,11 +66,19 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v3
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v2
+        with:
+          path: solution/frontend/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('solution/frontend/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-           
+
       - name: Use Node.js 
         uses: actions/setup-node@v3
         with:
           node-version: latest
-          cache: npm       
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
