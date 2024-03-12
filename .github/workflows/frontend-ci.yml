@@ -65,7 +65,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          cd solution/frontend && docker build --tag movies-frontend:${{ github.sha }} .        
+          cd solution/frontend && docker build --build-arg=REACT_APP_MOVIE_API_URL=http://localhost:5000 --tag movies-frontend:${{ github.sha }} .        
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2

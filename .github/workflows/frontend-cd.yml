@@ -15,12 +15,21 @@ jobs:
     steps:
     - name: Check out repository
       uses: actions/checkout@v3
+
+    - name: Cache npm dependencies
+      uses: actions/cache@v2
+      with:
+        path: solution/frontend/node_modules
+        key: ${{ runner.os }}-node-${{ hashFiles('solution/frontend/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+
     - name: Use Node.js 
       uses: actions/setup-node@v3
       with:
         node-version: latest
-        cache: npm
-        cache-dependency-path: solution/frontend/node_modules
+        cache: 'npm'
+        cache-dependency-path: solution/frontend/package-lock.json
     - name: Install dependencies
       run: cd solution/frontend && npm ci      
     - name: Run tests
@@ -32,6 +41,15 @@ jobs:
     steps:
     - name: Check out repository
       uses: actions/checkout@v3
+
+    - name: Cache npm dependencies
+      uses: actions/cache@v2
+      with:
+        path: solution/frontend/node_modules
+        key: ${{ runner.os }}-node-${{ hashFiles('solution/frontend/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+
     - name: Use Node.js 
       uses: actions/setup-node@v3
       with:
@@ -50,19 +68,28 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v3
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v2
+        with:
+          path: solution/frontend/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('solution/frontend/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-        
+
       - name: Use Node.js 
         uses: actions/setup-node@v3
         with:
           node-version: latest
           cache: npm   
-          cache-dependency-path: ./solution/frontend/node_modules 
+          cache-dependency-path: solution/frontend/package 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
       - name: Get Git SHA
         run: echo "GIT_SHA=$(echo ${{ github.sha }})"        
       - name: Build Docker image
         run: |
-          cd solution/frontend && docker build --tag movies-frontend:${{ github.sha }} .        
+          cd solution/frontend && docker build --build-arg=REACT_APP_MOVIE_API_URL=http://localhost:5000 --tag movies-frontend:${{ github.sha }} .        
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
