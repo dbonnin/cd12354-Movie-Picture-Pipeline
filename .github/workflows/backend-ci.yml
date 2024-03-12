@@ -1,14 +1,12 @@
 name: 'Backend-CI'
 
-# Triggers for the workflow
 on:
-  # Manual trigger using the workflow_dispatch event
+  
   workflow_dispatch:
 
-  # Automatic trigger on push events to the main branch
-  # push:
-  #   branches:
-  #     - main
+  pull_request:
+    branches:
+      - main
 jobs:
   lint:
     runs-on: ubuntu-latest
@@ -19,6 +17,7 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: 3.11    
+        cache: 'pipenv'
     - name: Run Linter
       run: |
         pip install flake8
@@ -33,6 +32,7 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: 3.11          
+        cache: 'pipenv'
     - name: Build Application
       run: |
         cd solution/backend
@@ -48,7 +48,7 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: 3.11    
-    
+        cache: 'pipenv'
     - name: Install Pipenv
       run: pip install pipenv
       working-directory: solution/backend
@@ -75,7 +75,8 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: 3.11    
+        python-version: 3.11  
+        cache: 'pipenv'          
     
     - name: Install Pipenv
       run: pip install pipenv

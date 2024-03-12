@@ -1,11 +1,9 @@
 name: 'Backend-CD'
 
-# Triggers for the workflow
 on:
-  # Manual trigger using the workflow_dispatch event
+
   workflow_dispatch:
 
-  # Automatic trigger on push events to the main branch
   push:
     branches:
       - main
@@ -20,6 +18,7 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: 3.11    
+        cache: 'pipenv'
     - name: Run Linter
       run: |
         pip install flake8
@@ -33,7 +32,8 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: 3.11          
+        python-version: 3.11   
+        cache: 'pipenv'       
     - name: Build Application
       run: |
         cd solution/backend
@@ -49,7 +49,7 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: 3.11    
-    
+        cache: 'pipenv'    
     - name: Install Pipenv
       run: pip install pipenv
       working-directory: solution/backend
@@ -76,8 +76,8 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: 3.11    
-    
+        python-version: 3.11   
+        cache: 'pipenv'
     - name: Install Pipenv
       run: pip install pipenv
       working-directory: solution/backend
@@ -88,7 +88,7 @@ jobs:
     
     - name: Build Docker image
       run: |
-        cd solution/backend && docker build --tag movies-backend:${{ github.sha }} .  
+        cd solution/backend && docker build docker build --build-arg=REACT_APP_MOVIE_API_URL=http://localhost:5000 --tag movies-backend:${{ github.sha }} .  
 
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v2
