@@ -14,11 +14,20 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
+
+    - name: Cache pipenv
+      uses: actions/cache@v2
+      with:
+        path: ~/.cache/pipenv
+        key: ${{ runner.os }}-pipenv-${{ hashFiles('solution/backend/Pipfile.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-pipenv-
+
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
         python-version: 3.11    
-        cache: 'pipenv'
+
     - name: Run Linter
       run: |
         pip install flake8
@@ -29,22 +38,42 @@ jobs:
     steps: 
     - name: Checkout code
       uses: actions/checkout@v3
+
+    - name: Cache pipenv
+      uses: actions/cache@v2
+      with:
+        path: ~/.cache/pipenv
+        key: ${{ runner.os }}-pipenv-${{ hashFiles('solution/backend/Pipfile.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-pipenv-      
+
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
         python-version: 3.11   
-        cache: 'pipenv'       
+        
     - name: Build Application
       run: |
         cd solution/backend
         pip install pipenv
-        pipenv install --dev        
+        pipenv install       
+
   test:
     needs: build
     runs-on: ubuntu-latest 
     steps: 
     - name: Checkout code
       uses: actions/checkout@v3
+
+    - name: Cache pipenv
+      uses: actions/cache@v2
+      with:
+        path: ~/.cache/pipenv
+        key: ${{ runner.os }}-pipenv-${{ hashFiles('solution/backend/Pipfile.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-pipenv-      
+
+      
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
@@ -55,7 +84,7 @@ jobs:
       working-directory: solution/backend
     
     - name: Install dependencies
-      run: pipenv install --dev
+      run: pipenv install
       working-directory: solution/backend
     
     - name: Run tests
@@ -73,6 +102,15 @@ jobs:
     steps: 
     - name: Checkout code
       uses: actions/checkout@v3
+
+    - name: Cache pipenv
+      uses: actions/cache@v2
+      with:
+        path: ~/.cache/pipenv
+        key: ${{ runner.os }}-pipenv-${{ hashFiles('solution/backend/Pipfile.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-pipenv-      
+
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
@@ -83,7 +121,7 @@ jobs:
       working-directory: solution/backend
     
     - name: Install dependencies
-      run: pipenv install --dev
+      run: pipenv install
       working-directory: solution/backend
     
     - name: Build Docker image
