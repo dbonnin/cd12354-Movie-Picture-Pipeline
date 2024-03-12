@@ -20,6 +20,7 @@ jobs:
       with:
         node-version: latest
         cache: npm
+        cache-dependency-path: solution/frontend/node_modules
     - name: Install dependencies
       run: cd solution/frontend && npm ci      
     - name: Run tests
@@ -36,6 +37,7 @@ jobs:
       with:
         node-version: latest
         cache: npm
+        cache-dependency-path: solution/frontend/node_modules
     - name: Install dependencies
       run: cd solution/frontend && npm ci      
     - name: Run lint
@@ -52,7 +54,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: latest
-          cache: npm    
+          cache: npm   
+          cache-dependency-path: solution/frontend/node_modules 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
       - name: Get Git SHA
