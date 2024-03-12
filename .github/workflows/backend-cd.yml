@@ -126,7 +126,7 @@ jobs:
     
     - name: Build Docker image
       run: |
-        cd solution/backend && docker build docker build --build-arg=REACT_APP_MOVIE_API_URL=http://localhost:5000 --tag movies-backend:${{ github.sha }} .  
+        cd solution/backend && docker build  --tag movies-backend:${{ github.sha }} .  
 
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v2
